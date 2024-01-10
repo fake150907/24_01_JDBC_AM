@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import com.KoreaIT.java.JDBCAM.controller.MemberController;
 import com.KoreaIT.java.JDBCAM.util.DBUtil;
 import com.KoreaIT.java.JDBCAM.util.SecSql;
 import com.KoreaIT.java.JDBCAM.util.Util;
@@ -35,7 +36,7 @@ public class App {
 			try {
 				conn = DriverManager.getConnection(url, "root", "");
 
-				int actionResult = doAction(conn, sc, cmd);
+				int actionResult = action(conn, sc, cmd);
 
 				if (actionResult == -1) {
 					System.out.println("==프로그램 종료==");
@@ -57,87 +58,18 @@ public class App {
 		}
 	}
 
-	private int doAction(Connection conn, Scanner sc, String cmd) {
+	private int action(Connection conn, Scanner sc, String cmd) {
 
 		if (cmd.equals("exit")) {
 			return -1;
 		}
-
-		if (cmd.equals("member join")) {
-			System.out.println("==회원 가입==");
-			String loginId = null;
-			while (true) {
-				System.out.print("로그인 아이디 : ");
-				loginId = sc.nextLine().trim();
-
-				if (loginId.length() < 2) {
-					System.out.println("아이디를 두 글자 이상 입력해주세요.");
-					continue;
-				}
-
-				if (loginId.contains(" ")) {
-					System.out.println("공백을 포함하면 안됩니다.");
-					continue;
-				}
-
-				SecSql sql = new SecSql();
-				sql.append("SELECT COUNT(*) > 0");
-				sql.append("FROM `member`");
-				sql.append("WHERE loginId = ?;", loginId);
-
-				boolean isLoginIdDup = DBUtil.selectRowBooleanValue(conn, sql);
-
-				if (isLoginIdDup) {
-					System.out.println("이미 있는 아이디입니다 다시입력해주세요.");
-					continue;
-				} else {
-					System.out.println("사용할 수 있는 아이디입니다.");
-					break;
-				}
-			}
-
-			String loginPw = null;
-			while (true) {
-				System.out.print("로그인 비밀번호 : ");
-				loginPw = sc.nextLine().trim();
-
-				if (loginPw.length() < 2) {
-					System.out.println("비밀번호를 두 글자 이상 입력해주세요");
-					continue;
-				}
-
-				if (loginPw.contains(" ")) {
-					System.out.println("공백을 포함하면 안됩니다.");
-					continue;
-				}
-
-				System.out.print("로그인 비밀번호 확인 : ");
-				String loginPwConfirm = sc.nextLine();
-				if (!loginPw.equals(loginPwConfirm)) {
-					System.out.println("비밀번호가 일치하지 않아. 다시 입력해주세요.");
-					continue;
-				}
-				break;
-			}
-
-			System.out.print("이름 : ");
-			String name = sc.nextLine();
-
-			SecSql sql = new SecSql();
-
-			sql.append("INSERT INTO `member`");
-			sql.append("SET regDate = NOW(),");
-			sql.append("updateDate = NOW(),");
-			sql.append("loginId = ?,", loginId);
-			sql.append("loginPw = ?,", loginPw);
-			sql.append("`name` = ?;", name);
-
-			int id = DBUtil.insert(conn, sql);
-
-			System.out.printf("%d번 회원이 가입 되었습니다. %s님 환영합니다.\n", id, name);
-
+		
+		MemberController memberController = new MemberController(conn, sc);
+		
+		if(cmd.equals("member join")) {
+			memberController.dojoin();
 		}
-
+		
 		if (cmd.equals("article write")) {
 			System.out.println("==글쓰기==");
 			System.out.print("제목 : ");
