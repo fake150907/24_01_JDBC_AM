@@ -1,17 +1,17 @@
 package com.KoreaIT.java.JDBCAM.service;
 
-import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
 
+import com.KoreaIT.java.JDBCAM.container.Container;
 import com.KoreaIT.java.JDBCAM.dao.ArticleDao;
 import com.KoreaIT.java.JDBCAM.dto.Article;
 
 public class ArticleService {
 	private ArticleDao acd;
 
-	public ArticleService(Connection conn) {
-		acd = new ArticleDao(conn);
+	public ArticleService() {
+		this.acd = Container.articleDao;
 	}
 
 	public int doWrite(String title, String body) {

@@ -1,31 +1,27 @@
 package com.KoreaIT.java.JDBCAM.controller;
 
-import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
+import com.KoreaIT.java.JDBCAM.container.Container;
 import com.KoreaIT.java.JDBCAM.dto.Article;
 import com.KoreaIT.java.JDBCAM.service.ArticleService;
 import com.KoreaIT.java.JDBCAM.util.Util;
 
 public class ArticleController {
-	private Scanner sc;
 	private String cmd;
 	private ArticleService asv;
 
-	public ArticleController(String cmd, Connection conn) {
-		sc = new Scanner(System.in);
-		this.cmd = cmd;
-		asv = new ArticleService(conn);
+	public ArticleController() {
+		this.asv = Container.articleService;
 	}
 
 	public void doWrite() {
 		System.out.println("==글쓰기==");
 		System.out.print("제목 : ");
-		String title = sc.nextLine();
+		String title = Container.sc.nextLine();
 		System.out.print("내용 : ");
-		String body = sc.nextLine();
+		String body = Container.sc.nextLine();
 
 		if (title.length() < 1 || body.length() < 1) {
 			System.out.println("올바른 내용을 입력해주세요.");
@@ -103,9 +99,9 @@ public class ArticleController {
 
 		System.out.println("==수정==");
 		System.out.print("새 제목 : ");
-		String title = sc.nextLine().trim();
+		String title = Container.sc.nextLine().trim();
 		System.out.println("새 내용 : ");
-		String body = sc.nextLine().trim();
+		String body = Container.sc.nextLine().trim();
 
 		asv.doModify(id, title, body);
 

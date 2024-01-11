@@ -1,21 +1,18 @@
 package com.KoreaIT.java.JDBCAM.controller;
 
-import java.sql.Connection;
-import java.util.Scanner;
+import java.util.Map;
 
+import com.KoreaIT.java.JDBCAM.container.Container;
+import com.KoreaIT.java.JDBCAM.dto.Article;
 import com.KoreaIT.java.JDBCAM.dto.Member;
 import com.KoreaIT.java.JDBCAM.service.MemberService;
+import com.KoreaIT.java.JDBCAM.util.Util;
 
 public class MemberController {
-	private Connection conn;
-	private Scanner sc;
-	private boolean loginedMember = false;
 	private MemberService memberService;
 
-	public MemberController(Connection conn, Scanner sc) {
-		this.conn = conn;
-		this.sc = sc;
-		this.memberService = new MemberService(conn);
+	public MemberController() {
+		this.memberService = Container.memberService;
 	}
 
 	public void doJoin() {
@@ -26,7 +23,7 @@ public class MemberController {
 
 		while (true) {
 			System.out.print("로그인 아이디 : ");
-			loginId = sc.nextLine().trim();
+			loginId = Container.sc.nextLine().trim();
 
 			if (loginId.length() < 2) {
 				System.out.println("아이디를 두 글자 이상 입력해주세요.");
@@ -50,7 +47,7 @@ public class MemberController {
 		}
 		while (true) {
 			System.out.print("로그인 비밀번호 : ");
-			loginPw = sc.nextLine().trim();
+			loginPw = Container.sc.nextLine().trim();
 
 			if (loginPw.length() < 2) {
 				System.out.println("비밀번호를 두 글자 이상 입력해주세요");
@@ -63,7 +60,7 @@ public class MemberController {
 			}
 
 			System.out.print("로그인 비밀번호 확인 : ");
-			String loginPwConfirm = sc.nextLine();
+			String loginPwConfirm = Container.sc.nextLine();
 			if (!loginPw.equals(loginPwConfirm)) {
 				System.out.println("비밀번호가 일치하지 않아. 다시 입력해주세요.");
 				continue;
@@ -72,7 +69,7 @@ public class MemberController {
 		}
 		while (true) {
 			System.out.print("이름 : ");
-			name = sc.nextLine();
+			name = Container.sc.nextLine();
 
 			if (loginPw.length() < 2) {
 				System.out.println("비밀번호를 두 글자 이상 입력해주세요");
@@ -99,7 +96,7 @@ public class MemberController {
 		System.out.println("==로그인==");
 		while (true) {
 			System.out.print("로그인 아이디 : ");
-			loginId = sc.nextLine().trim();
+			loginId = Container.sc.nextLine().trim();
 
 			if (loginId.length() == 0 || loginId.contains(" ")) {
 				System.out.println("아이디 똑바로 입력해");
@@ -127,7 +124,7 @@ public class MemberController {
 				break;
 			}
 			System.out.print("비밀번호 : ");
-			loginPw = sc.nextLine().trim();
+			loginPw = Container.sc.nextLine().trim();
 
 			if (loginPw.length() == 0 || loginPw.contains(" ")) {
 				tryCount++;
@@ -140,6 +137,8 @@ public class MemberController {
 				System.out.println("일치하지 않아");
 				continue;
 			}
+			Container.session.loginedMember = member;
+			Container.session.loginedMemberId = 0;
 
 			System.out.println(member.getName() + "님 환영");
 			break;
@@ -148,9 +147,13 @@ public class MemberController {
 
 	}
 
-	public void doLogout() {
-		loginedMember = false;
-		System.out.println("로그아웃 되었습니다.");
+	public void showProfile() {
+		if (Container.session.loginedMemberId == -1) {
+			System.out.println("로그인 상태가 아님");
+			return;
+		} else {
+			System.out.println(Container.session.loginedMember);
+		}
 	}
 
 }
