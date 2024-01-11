@@ -25,4 +25,8 @@ public class Session {
 		return loginedMemberId != -1;
 	}
 
+	public String getMemberName() {
+		return loginedMember.getName();
+	}
+
 }

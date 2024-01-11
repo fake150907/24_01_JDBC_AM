@@ -9,7 +9,6 @@ import com.KoreaIT.java.JDBCAM.service.ArticleService;
 import com.KoreaIT.java.JDBCAM.util.Util;
 
 public class ArticleController {
-	private String cmd;
 	private ArticleService asv;
 
 	public ArticleController() {
@@ -27,8 +26,9 @@ public class ArticleController {
 			System.out.println("올바른 내용을 입력해주세요.");
 			return;
 		}
+		int memberId = Container.session.loginedMemberId;
 
-		int id = asv.doWrite(title, body);
+		int id = asv.doWrite(memberId, title, body);
 
 		System.out.println(id + "번 글이 생성되었습니다");
 	}
@@ -36,21 +36,22 @@ public class ArticleController {
 	public void showList() {
 		System.out.println("==목록==");
 
-		List<Article> articles = asv.showList();
+		List<Article> articles = asv.getArticles();
 
 		if (articles.size() == 0) {
 			System.out.println("게시글이 없습니다");
 			return;
 		}
 
-		System.out.println("  번호  /   제목  ");
+		System.out.println("  번호  /  작성자  /   제목  ");
 
 		for (Article article : articles) {
-			System.out.printf("  %d     /   %s   \n", article.getId(), article.getTitle());
+			System.out.printf("   %d     /   %s     /   %s   \n", article.getId(), article.getExtra__writer(),
+					article.getTitle());
 		}
 	}
 
-	public void showDetail() {
+	public void showDetail(String cmd) {
 
 		int id = 0;
 
@@ -63,7 +64,7 @@ public class ArticleController {
 
 		System.out.println("==상세보기==");
 
-		Map<String, Object> articleMap = asv.foundArticleMap(id);
+		Map<String, Object> articleMap = asv.getArticleById(id);
 
 		if (articleMap.isEmpty()) {
 			System.out.println(id + "번 글은 없습니다.");
@@ -75,12 +76,13 @@ public class ArticleController {
 		System.out.println("번호 : " + article.getId());
 		System.out.println("작성날짜 : " + Util.getNowDate_TimeStr(article.getRegDate()));
 		System.out.println("수정날짜 : " + Util.getNowDate_TimeStr(article.getUpdateDate()));
+		System.out.println("작성자 : " + article.getMemberId());
 		System.out.println("제목 : " + article.getTitle());
 		System.out.println("내용 : " + article.getBody());
 
 	}
 
-	public void doModify() {
+	public void doModify(String cmd) {
 		int id = 0;
 
 		try {
@@ -90,25 +92,30 @@ public class ArticleController {
 			return;
 		}
 
-		Map<String, Object> articleMap = asv.foundArticleMap(id);
+		Map<String, Object> articleMap = asv.getArticleById(id);
 
 		if (articleMap.isEmpty()) {
 			System.out.println(id + "번 글은 없습니다.");
+			return;
+		}
+
+		if (!articleMap.get("name").equals(Container.session.loginedMember.getName())) {
+			System.out.println("작성자만 수정할 수 있습니다.");
 			return;
 		}
 
 		System.out.println("==수정==");
 		System.out.print("새 제목 : ");
 		String title = Container.sc.nextLine().trim();
-		System.out.println("새 내용 : ");
+		System.out.print("새 내용 : ");
 		String body = Container.sc.nextLine().trim();
 
-		asv.doModify(id, title, body);
+		asv.doUpdate(id, title, body);
 
 		System.out.println(id + "번 글이 수정되었습니다.");
 	}
 
-	public void doRemove() {
+	public void doRemove(String cmd) {
 		int id = 0;
 
 		try {
@@ -118,14 +125,19 @@ public class ArticleController {
 			return;
 		}
 
-		Map<String, Object> articleMap = asv.foundArticleMap(id);
+		Map<String, Object> articleMap = asv.getArticleById(id);
 
 		if (articleMap.isEmpty()) {
 			System.out.println(id + "번 글은 없습니다.");
 			return;
 		}
 
-		asv.doRemove(id);
+		if (!articleMap.get("name").equals(Container.session.loginedMember.getName())) {
+			System.out.println("작성자만 삭제할 수 있습니다.");
+			return;
+		}
+
+		asv.doDelete(id);
 
 		System.out.println(id + "번 글이 삭제되었습니다.");
 	}

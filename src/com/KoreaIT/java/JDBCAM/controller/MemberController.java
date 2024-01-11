@@ -137,9 +137,8 @@ public class MemberController {
 				System.out.println("일치하지 않아");
 				continue;
 			}
-			Container.session.loginedMember = member;
+
 			Container.session.login(member);
-			Container.session.loginedMemberId = 0;
 
 			System.out.println(member.getName() + "님 환영");
 			break;

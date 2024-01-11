@@ -77,22 +77,28 @@ public class App {
 		if (cmdBits[0].equals("article")) {
 			switch (cmdBits[1]) {
 			case "write":
-				isLogined();
+				if (isLogined() == false) {
+					break;
+				}
 				actr.doWrite();
 				break;
 			case "list":
 				actr.showList();
 				break;
 			case "detail":
-				actr.showDetail();
+				actr.showDetail(cmd);
 				break;
 			case "modify":
-				isLogined();
-				actr.doModify();
+				if (isLogined() == false) {
+					break;
+				}
+				actr.doModify(cmd);
 				break;
 			case "delete":
-				isLogined();
-				actr.doRemove();
+				if (isLogined() == false) {
+					break;
+				}
+				actr.doRemove(cmd);
 				break;
 			default:
 				System.out.println("처리할 수 없는 명령어입니다.");
@@ -108,11 +114,15 @@ public class App {
 				mctr.login();
 				break;
 			case "logout":
-				isLogined();
+				if (isLogined() == false) {
+					break;
+				}
 				mctr.logout();
 				break;
 			case "profile":
-				isLogined();
+				if (isLogined() == false) {
+					break;
+				}
 				mctr.showProfile();
 				break;
 			default:
@@ -123,10 +133,11 @@ public class App {
 		return 0;
 	}
 
-	private void isLogined() {
+	private boolean isLogined() {
 		if (Container.session.isLogined() == false) {
-			System.out.println("로그인 상태가 아님");
-			return;
+			System.out.println("로그인 후 이용해주세요.");
+			return false;
 		}
+		return true;
 	}
 }
