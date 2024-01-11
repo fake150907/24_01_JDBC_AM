@@ -15,7 +15,7 @@ public class MemberController {
 		this.sc = sc;
 	}
 
-	public void dojoin() {
+	public void doJoin() {
 		System.out.println("==회원 가입==");
 		String loginId = null;
 		String loginPw = null;
@@ -101,6 +101,26 @@ public class MemberController {
 		int id = DBUtil.insert(conn, sql);
 
 		System.out.printf("%d번 회원이 가입 되었습니다. %s님 환영합니다.\n", id, name);
+	}
+
+	public void doLogin() {
+		System.out.print("아이디 : ");
+		String loginId = sc.nextLine().trim();
+		System.out.print("비밀번호 : ");
+		String loginPw = sc.nextLine().trim();
+
+		SecSql sql = new SecSql();
+		sql.append("SELECT COUNT(*) > 0");
+		sql.append("FROM `member`");
+		sql.append("WHERE loginId = ?;", loginId);
+
+		boolean isLoginIdDup = DBUtil.selectRowBooleanValue(conn, sql);
+
+		if (isLoginIdDup == false) {
+			System.out.println("존재하지 않는 아이디입니다. 똑바로 입력해주세요.");
+			return;
+		}
+
 	}
 
 }
