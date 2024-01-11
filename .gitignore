@@ -1,5 +1,11 @@
+<<<<<<< HEAD
 .settings
 .projects
 .classpath
+=======
+.classpath
+.project
+.settings
+>>>>>>> 7db270959f17c47689049647e1234489900231f0
 bin
 build

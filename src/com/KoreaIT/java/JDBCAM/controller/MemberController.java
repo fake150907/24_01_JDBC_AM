@@ -104,6 +104,7 @@ public class MemberController {
 	}
 
 	public void doLogin() {
+<<<<<<< HEAD
 		System.out.print("아이디 : ");
 		String loginId = sc.nextLine().trim();
 		System.out.print("비밀번호 : ");
@@ -121,6 +122,10 @@ public class MemberController {
 			return;
 		}
 
+=======
+		// TODO Auto-generated method stub
+		System.out.println("일단 git push해야해서 급하다.");
+>>>>>>> 7db270959f17c47689049647e1234489900231f0
 	}
 
 }
