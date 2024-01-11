@@ -1,12 +1,8 @@
 package com.KoreaIT.java.JDBCAM.controller;
 
-import java.util.Map;
-
 import com.KoreaIT.java.JDBCAM.container.Container;
-import com.KoreaIT.java.JDBCAM.dto.Article;
 import com.KoreaIT.java.JDBCAM.dto.Member;
 import com.KoreaIT.java.JDBCAM.service.MemberService;
-import com.KoreaIT.java.JDBCAM.util.Util;
 
 public class MemberController {
 	private MemberService memberService;
@@ -89,7 +85,11 @@ public class MemberController {
 		System.out.printf("%d번 회원이 가입 되었습니다. %s님 환영합니다.\n", id, name);
 	}
 
-	public void doLogin() {
+	public void login() {
+		if (Container.session.isLogined()) {
+			System.out.println("로그아웃하고 이용해주세요");
+			return;
+		}
 		String loginId = null;
 		String loginPw = null;
 
@@ -138,6 +138,7 @@ public class MemberController {
 				continue;
 			}
 			Container.session.loginedMember = member;
+			Container.session.login(member);
 			Container.session.loginedMemberId = 0;
 
 			System.out.println(member.getName() + "님 환영");
@@ -148,12 +149,22 @@ public class MemberController {
 	}
 
 	public void showProfile() {
-		if (Container.session.loginedMemberId == -1) {
+		if (Container.session.isLogined() == false) {
 			System.out.println("로그인 상태가 아님");
 			return;
 		} else {
 			System.out.println(Container.session.loginedMember);
 		}
+	}
+
+	public void logout() {
+		if (Container.session.isLogined() == false) {
+			System.out.println("로그인 상태가 아님");
+			return;
+		} else {
+			Container.session.logout();
+		}
+
 	}
 
 }

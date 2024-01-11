@@ -77,6 +77,7 @@ public class App {
 		if (cmdBits[0].equals("article")) {
 			switch (cmdBits[1]) {
 			case "write":
+				isLogined();
 				actr.doWrite();
 				break;
 			case "list":
@@ -86,9 +87,11 @@ public class App {
 				actr.showDetail();
 				break;
 			case "modify":
+				isLogined();
 				actr.doModify();
 				break;
 			case "delete":
+				isLogined();
 				actr.doRemove();
 				break;
 			default:
@@ -102,12 +105,14 @@ public class App {
 				mctr.doJoin();
 				break;
 			case "login":
-				mctr.doLogin();
+				mctr.login();
 				break;
 			case "logout":
-//				mctr.doLogout();
+				isLogined();
+				mctr.logout();
 				break;
 			case "profile":
+				isLogined();
 				mctr.showProfile();
 				break;
 			default:
@@ -116,6 +121,12 @@ public class App {
 		}
 
 		return 0;
+	}
 
+	private void isLogined() {
+		if (Container.session.isLogined() == false) {
+			System.out.println("로그인 상태가 아님");
+			return;
+		}
 	}
 }
