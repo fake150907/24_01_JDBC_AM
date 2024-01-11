@@ -104,28 +104,8 @@ public class MemberController {
 	}
 
 	public void doLogin() {
-<<<<<<< HEAD
-		System.out.print("아이디 : ");
-		String loginId = sc.nextLine().trim();
-		System.out.print("비밀번호 : ");
-		String loginPw = sc.nextLine().trim();
-
-		SecSql sql = new SecSql();
-		sql.append("SELECT COUNT(*) > 0");
-		sql.append("FROM `member`");
-		sql.append("WHERE loginId = ?;", loginId);
-
-		boolean isLoginIdDup = DBUtil.selectRowBooleanValue(conn, sql);
-
-		if (isLoginIdDup == false) {
-			System.out.println("존재하지 않는 아이디입니다. 똑바로 입력해주세요.");
-			return;
-		}
-
-=======
 		// TODO Auto-generated method stub
 		System.out.println("일단 git push해야해서 급하다.");
->>>>>>> 7db270959f17c47689049647e1234489900231f0
 	}
 
 }

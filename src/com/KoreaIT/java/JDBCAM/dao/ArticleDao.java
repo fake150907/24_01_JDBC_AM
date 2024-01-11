@@ -74,7 +74,7 @@ public class ArticleDao {
 		return articles;
 	}
 
-	public Map<String, Object> getArticleMap(int id) {
+	public Map<String, Object> foundArticleMap(int id) {
 		SecSql sql = new SecSql();
 
 		sql.append("SELECT *");

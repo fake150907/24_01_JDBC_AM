@@ -55,11 +55,7 @@ public class App {
 
 	private int action(Connection conn, Scanner sc, String cmd) {
 
-<<<<<<< HEAD
 		ArticleController actr = new ArticleController(cmd, conn);
-=======
-		ArticleController actr = new ArticleController(cmd);
->>>>>>> 7db270959f17c47689049647e1234489900231f0
 		MemberController mctr = new MemberController(conn, sc);
 
 		String[] cmdBits = cmd.split(" ");
@@ -72,7 +68,6 @@ public class App {
 		if (cmdBits[0].equals("article")) {
 			switch (cmdBits[1]) {
 			case "write":
-<<<<<<< HEAD
 				actr.doWrite();
 				break;
 			case "list":
@@ -86,21 +81,6 @@ public class App {
 				break;
 			case "delete":
 				actr.doRemove();
-=======
-				actr.write(conn);
-				break;
-			case "list":
-				actr.list(conn);
-				break;
-			case "detail":
-				actr.detail(conn);
-				break;
-			case "modify":
-				actr.modify(conn);
-				break;
-			case "delete":
-				actr.remove(conn);
->>>>>>> 7db270959f17c47689049647e1234489900231f0
 				break;
 			default:
 				System.out.println("처리할 수 없는 명령어입니다.");
