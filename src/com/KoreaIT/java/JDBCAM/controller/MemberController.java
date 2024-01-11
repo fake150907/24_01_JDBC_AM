@@ -3,12 +3,13 @@ package com.KoreaIT.java.JDBCAM.controller;
 import java.sql.Connection;
 import java.util.Scanner;
 
+import com.KoreaIT.java.JDBCAM.dto.Member;
 import com.KoreaIT.java.JDBCAM.service.MemberService;
 
 public class MemberController {
 	private Connection conn;
 	private Scanner sc;
-
+	private boolean loginedMember = false;
 	private MemberService memberService;
 
 	public MemberController(Connection conn, Scanner sc) {
@@ -92,8 +93,64 @@ public class MemberController {
 	}
 
 	public void doLogin() {
-		// TODO Auto-generated method stub
-		System.out.println("일단 git push해야해서 급하다.");
+		String loginId = null;
+		String loginPw = null;
+
+		System.out.println("==로그인==");
+		while (true) {
+			System.out.print("로그인 아이디 : ");
+			loginId = sc.nextLine().trim();
+
+			if (loginId.length() == 0 || loginId.contains(" ")) {
+				System.out.println("아이디 똑바로 입력해");
+				continue;
+			}
+
+			boolean isLoginIdDup = memberService.isLoginIdDup(loginId);
+
+			if (isLoginIdDup == false) {
+				System.out.println(loginId + "는(은) 없는놈이야");
+				continue;
+			}
+
+			break;
+		}
+
+		Member member = memberService.getMemberByLoginId(loginId);
+
+		int tryMaxCount = 3;
+		int tryCount = 0;
+
+		while (true) {
+			if (tryCount >= tryMaxCount) {
+				System.out.println("다시 확인하고 시도해라");
+				break;
+			}
+			System.out.print("비밀번호 : ");
+			loginPw = sc.nextLine().trim();
+
+			if (loginPw.length() == 0 || loginPw.contains(" ")) {
+				tryCount++;
+				System.out.println("비밀번호 똑바로 입력해");
+				continue;
+			}
+
+			if (member.getLoginPw().equals(loginPw) == false) {
+				tryCount++;
+				System.out.println("일치하지 않아");
+				continue;
+			}
+
+			System.out.println(member.getName() + "님 환영");
+			break;
+
+		}
+
+	}
+
+	public void doLogout() {
+		loginedMember = false;
+		System.out.println("로그아웃 되었습니다.");
 	}
 
 }

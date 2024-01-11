@@ -94,6 +94,10 @@ public class App {
 				break;
 			case "login":
 				mctr.doLogin();
+				break;
+			case "logout":
+				mctr.doLogout();
+				break;
 			default:
 				System.out.println("처리할 수 없는 명령어 입니다.");
 			}
